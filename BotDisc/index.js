@@ -1,4 +1,4 @@
-const {epicGames, steam} = require('./functions.js');
+//const {epicGames, steam} = require('./functions.js');
 const {Client, Intents} = require('discord.js');
 const fs = require('fs');
 const config = require("./config.json");
@@ -20,20 +20,29 @@ client.on("message", async function(message) {
         message.channel.send("Shutting down...").then(() => {
             client.destroy();
             console.log("Bot off");
-        })
+            })
     }
     else if (command === "ping") {
         const timeTaken = message.createdTimestamp - Date.now() ;
         message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
     }
-    else if(command === "epic"){
-        var ret = fs.readFileSync(FILEPATH, 'utf-8')
-        console.log(ret)
-        message.channel.send(ret);
+    else if(command === "epic"){   
+        const ret = fs.readFileSync(FILEPATH, 'utf-8');
+        var tratar = ret.split('§');
+        final = "";
+        for(i=0;i<tratar.length;i++){
+            final+=tratar[i]+'\n'
+        }
+        message.channel.send(String(final))
     }
     else if(command === "steam"){
-        var ret = await steam();
-        message.channel.send(ret);
+        //var ret = await steam();
+        message.channel.send('yet to do');
+    }
+    else if(command === "time"){
+        var date_ob = new Date();
+        var hour = date_ob.getHours();
+        message.channel.send(hour.toString());
     }
 }); 
 

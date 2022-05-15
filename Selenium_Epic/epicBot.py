@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from datetime import datetime
 import os.path
 import time
 
@@ -35,7 +36,13 @@ def deal(str):
         day+='12'
     return day + hour
 
-PATH = "C:/Users/lsdeo/Documents/Prog/BotPromoDisc/perna-bot/chromedriver.exe"
+def weak(str):
+    if(str.find("às") != -1):
+        return "essa"
+    else:
+        return "outra"
+
+PATH = "D:/Users/lsdeo/Documents/Prog/BotPromoDisc/PernaBot/chromedriver.exe"
 WEBSITE = "https://www.epicgames.com/store/pt-BR/"
 driver = webdriver.Chrome(PATH)
 
@@ -47,47 +54,40 @@ driver.close()
 vec = stringContent.split("\n")
 game = []
 aux = ""
-for i in range(len(vec)):
-    if i%3==0 and i!=0:
-       game.append(aux) 
-    else:
-        aux+=vec[i]+';'
-message = []
-for i in range(len(game)):
-    aux = str(game[0])
-    aux = aux.split(";")
-    tim = aux[2].split("Grátis - ")
-    txt = '@everyone ' + aux[1] + ' está de graça para resgate permanente na Epic Games até dia ' + deal(tim[1])
-    message.append(txt)
-FILEPATH = "../games.txt"
+count = 0
 
-if not os.path.isfile(FILEPATH):
-    file = open(FILEPATH, 'w', encoding='utf-8')
-    str = ""
-    for m in message:
-        str += m
-    file.write(str)
-else:
-    file = open(FILEPATH, 'r')
-    fileContent = file.read()
-    file.close()
-    lines = fileContent.split('\n')
-    games = []
-    noRepeat = True
-    file = open(FILEPATH, 'w', encoding='utf-8')
-    file.write("")
-    file.close()
-    file = open(FILEPATH, 'a', encoding='utf-8')
-    if(len(lines)==0):
-        for m in message:
-            file.write(str(m))
+#Listar os jogos disponíveis no site da Epic
+for info in vec:
+    count+=1
+    aux+=info+';'
+    if count%3==0:
+       game.append(aux) 
+       aux=""
+messages = ["@everyone§"]
+tim = []
+
+#Tratar as informações dos jogos e criar a mensagem a ser enviada
+for g in game:
+    aux = str(g)
+    aux = aux.split(";")
+    if aux[2].find("Grátis - ")!=-1:
+        tim = aux[2].split("Grátis - ")
     else:
-        for line in lines:
-            for m in message:
-                if(line == m):
-                    noRepeat = False
-            if(noRepeat):
-                file.write(str(m))
-            else:
-                noRepeat = True     
-    file.close()
+        tim = aux[2].split("Grátis ")
+    nome = aux[1].lower()
+    nomes = nome.split(' ')
+    if weak(tim[1]) == "essa":
+        txt = '-' + aux[1] + ' está de graça para resgate permanente na Epic até dia ' + deal(tim[1]) + '§'
+    elif weak(tim[1]) == "outra":
+        period = str(tim[1])
+        tim = period.split("-")
+        period = tim[0] + "e" + tim[1]
+        txt = '-' + aux[1] + ' estará de graça para resgate permanente na Epic entre os dias ' + period + '§'
+    messages.append(txt)
+messages.append(WEBSITE+"free-games")
+file = open("../games.txt", 'w', encoding='utf-8')
+str = ""
+for m in messages:
+    str += m
+file.write(str)
+file.close()
