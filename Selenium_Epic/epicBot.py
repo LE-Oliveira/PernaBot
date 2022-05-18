@@ -1,8 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from datetime import datetime
-import os.path
-import time
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 
 def deal(str):
     pieces = str.split('.')
@@ -43,12 +41,12 @@ def weak(str):
         return "outra"
 
 PATH = "D:/Users/lsdeo/Documents/Prog/BotPromoDisc/PernaBot/chromedriver.exe"
-WEBSITE = "https://www.epicgames.com/store/pt-BR/"
-driver = webdriver.Chrome(PATH)
+WEBSITE = "https://www.epicgames.com/store/pt-BR/free-games"
+driver = webdriver.Chrome(service=Service(PATH))
 
-driver.get(WEBSITE+"free-games")
+driver.get(WEBSITE)
 
-element = driver.find_element_by_class_name("css-1myhtyb")
+element = driver.find_element(By.CLASS_NAME, "css-1myhtyb")
 stringContent = element.text
 driver.close()
 vec = stringContent.split("\n")
