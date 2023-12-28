@@ -1,14 +1,16 @@
-//const {epicGames, steam} = require('./functions.js');
+const {epicGames} = require('./seleniumEpic.js');
 const {Client, Intents} = require('discord.js');
 const fs = require('fs');
+const { waitForDebugger } = require('inspector');
 const config = require("./config.json");
-const FILEPATH = "../games.txt";
+const EPIC_FILEPATH = "../gamesEpic.txt";
+const STEAM_FILEPATH = "../gamesSteam.txt";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const prefix = "¢";
 
-client.on("message", async function(message) { 
+client.on("messageCreate", async function(message) { 
     if (!message.content.startsWith(prefix)) return;
     if (message.author.bot) return; 
 
@@ -16,7 +18,7 @@ client.on("message", async function(message) {
     const args = commandBody.split(' ');
     const command = args.shift().toLowerCase();
 
-    if (command == "shutdown") { 
+    if (command === "sd") { 
         message.channel.send("Shutting down...").then(() => {
             client.destroy();
             console.log("Bot off");
@@ -26,17 +28,33 @@ client.on("message", async function(message) {
         const timeTaken = message.createdTimestamp - Date.now() ;
         message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
     }
-    else if(command === "epic"){   
-        const ret = fs.readFileSync(FILEPATH, 'utf-8');
+    else if(command === "help"){
+        message.reply(`
+            ¢ping  -> pong\n¢epic  -> free games this week\n¢steam -> under maintainence
+        `)
+    }
+    else if(command === "epic"){
+        try{
+            let a = await epicGames();
+            message.channel.send(`I'm sorry to inform u, but this command has returned an error... The Adm is looking after the solution. Stay tuned: `, a);
+            // const ret = fs.readFileSync(EPIC_FILEPATH, 'utf-8');    //le o arquivo na minha máquina
+            // var tratar = ret.split('§');                            
+            // final = "";
+            // for(i=0;i<tratar.length;i++) final+=tratar[i]+'\n';
+            // message.channel.send(String(final));                    //envia a mensagem
+        }
+        catch(error){
+            message.channel.send(`I'm sorry to inform u, but this command is return an error... The Adm is looking after the solution. Stay tuned`)
+        }
+    }
+    else if(command === "steam"){
+        /*const ret = fs.readFileSync(STEAM_FILEPATH, 'utf-8');
         var tratar = ret.split('§');
         final = "";
         for(i=0;i<tratar.length;i++){
-            final+=tratar[i]+'\n'
+            final+=tratar[i]+'\n';
         }
-        message.channel.send(String(final))
-    }
-    else if(command === "steam"){
-        //var ret = await steam();
+        message.channel.send(String(final))*/
         message.channel.send('yet to do');
     }
     else if(command === "time"){

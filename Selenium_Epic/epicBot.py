@@ -82,8 +82,8 @@ for g in game:
         period = tim[0] + "e" + tim[1]
         txt = '-' + aux[1] + ' estará de graça para resgate permanente na Epic entre os dias ' + period + '§'
     messages.append(txt)
-messages.append(WEBSITE+"free-games")
-file = open("../games.txt", 'w', encoding='utf-8')
+messages.append(WEBSITE)
+file = open("../gamesEpic.txt", 'w', encoding='utf-8')
 str = ""
 for m in messages:
     str += m

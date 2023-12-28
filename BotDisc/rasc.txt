@@ -1,0 +1,1 @@
+- salvar na última linha o timestamp e ver se já passou de quinta
