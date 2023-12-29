@@ -1,10 +1,10 @@
-const {epicGames} = require('./seleniumEpic.js');
-const {Client, Intents} = require('discord.js');
-const fs = require('fs');
-const { waitForDebugger } = require('inspector');
+const { epicGames } = require('./seleniumEpic.js');
+const { Client, Intents } = require('discord.js');
+// const fs = require('fs');
+// const { waitForDebugger } = require('inspector');
 const config = require("./config.json");
-const EPIC_FILEPATH = "../gamesEpic.txt";
-const STEAM_FILEPATH = "../gamesSteam.txt";
+// const EPIC_FILEPATH = "../gamesEpic.txt";
+// const STEAM_FILEPATH = "../gamesSteam.txt";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -34,17 +34,10 @@ client.on("messageCreate", async function(message) {
         `)
     }
     else if(command === "epic"){
-        try{
-            let a = await epicGames();
-            message.channel.send(`I'm sorry to inform u, but this command has returned an error... The Adm is looking after the solution. Stay tuned: `, a);
-            // const ret = fs.readFileSync(EPIC_FILEPATH, 'utf-8');    //le o arquivo na minha máquina
-            // var tratar = ret.split('§');                            
-            // final = "";
-            // for(i=0;i<tratar.length;i++) final+=tratar[i]+'\n';
-            // message.channel.send(String(final));                    //envia a mensagem
-        }
+        try{ message.channel.send(await epicGames());}
         catch(error){
-            message.channel.send(`I'm sorry to inform u, but this command is return an error... The Adm is looking after the solution. Stay tuned`)
+            message.channel.send(`I'm sorry to inform u, but this command is returning an error... The Adm is looking after the solution. Stay tuned`);
+            console.log(error)
         }
     }
     else if(command === "steam"){
