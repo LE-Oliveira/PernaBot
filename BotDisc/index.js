@@ -1,4 +1,4 @@
-const { epicGames, steamDB } = require('./selenium.js');
+const { epicGames } = require('./seleniumEpic.js');
 const { Client, Intents } = require('discord.js');
 // const fs = require('fs');
 // const { waitForDebugger } = require('inspector');
