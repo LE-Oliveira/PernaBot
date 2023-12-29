@@ -1,4 +1,4 @@
-const { epicGames } = require('./seleniumEpic.js');
+const { epicGames, steamDB } = require('./selenium.js');
 const { Client, Intents } = require('discord.js');
 // const fs = require('fs');
 // const { waitForDebugger } = require('inspector');
@@ -18,37 +18,27 @@ client.on("messageCreate", async function(message) {
     const args = commandBody.split(' ');
     const command = args.shift().toLowerCase();
 
-    if (command === "sd") { 
-        message.channel.send("Shutting down...").then(() => {
-            client.destroy();
-            console.log("Bot off");
-            })
-    }
-    else if (command === "ping") {
+    // if (command === "sd") { 
+    //     message.channel.send("Shutting down...").then(() => {
+    //         client.destroy();
+    //         console.log("Bot off");
+    //         })
+    // }
+    if (command === "ping") {
         const timeTaken = message.createdTimestamp - Date.now() ;
         message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
     }
     else if(command === "help"){
         message.reply(`
-            ¢ping  -> pong\n¢epic  -> free games this week\n¢steam -> under maintainence
+            ¢ping  -> pong\n¢epic  -> free games this week\n¢steam -> nyi
         `)
     }
     else if(command === "epic"){
         try{ message.channel.send(await epicGames());}
         catch(error){
             message.channel.send(`I'm sorry to inform u, but this command is returning an error... The Adm is looking after the solution. Stay tuned`);
-            console.log(error)
+            console.log(error);
         }
-    }
-    else if(command === "steam"){
-        /*const ret = fs.readFileSync(STEAM_FILEPATH, 'utf-8');
-        var tratar = ret.split('§');
-        final = "";
-        for(i=0;i<tratar.length;i++){
-            final+=tratar[i]+'\n';
-        }
-        message.channel.send(String(final))*/
-        message.channel.send('yet to do');
     }
     else if(command === "time"){
         var date_ob = new Date();
