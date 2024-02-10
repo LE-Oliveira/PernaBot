@@ -18,25 +18,20 @@ client.on("messageCreate", async function(message) {
     const args = commandBody.split(' ');
     const command = args.shift().toLowerCase();
 
-    // if (command === "sd") { 
-    //     message.channel.send("Shutting down...").then(() => {
-    //         client.destroy();
-    //         console.log("Bot off");
-    //         })
-    // }
     if (command === "ping") {
         const timeTaken = message.createdTimestamp - Date.now() ;
-        message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+        message.reply(`Pong! Essa mensagem teve latência de ${timeTaken}ms.`);
     }
     else if(command === "help"){
         message.reply(`
-            ¢ping  -> pong\n¢epic  -> free games this week\n¢steam -> nyi
+            ¢ping  -> pong\n¢epic  -> jogos grátis nessa semana\n¢steam -> nyi
         `)
     }
     else if(command === "epic"){
-        try{ message.channel.send(await epicGames());}
+        const initialMessage = await message.channel.send("Um momento, estou conferindo as últimas informações do servidor...");
+        try{ await initialMessage.edit(await epicGames());}
         catch(error){
-            message.channel.send(`I'm sorry to inform u, but this command is returning an error... The Adm is looking after the solution. Stay tuned`);
+            await initialMessage.edit(`Sinto-lhe informar, mas esse comando está retornando um erro... O Adm está trabalhando na solução. Fique ligado!`);
             console.log(error);
         }
     }
@@ -53,3 +48,7 @@ console.log("Bot on");
 const convert = (from, to) => str => Buffer.from(str, from).toString(to)
 const utf8ToHex = convert('utf8', 'hex')
 const hexToUtf8 = convert('hex', 'utf8')
+
+
+// fechar o chrome caso dê erro
+// mandar mensagem dizendo que está olhando

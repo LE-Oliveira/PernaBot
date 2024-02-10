@@ -1,4 +1,6 @@
 const { Builder, By, until } = require('selenium-webdriver');
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 function extract_data(text){
     const months = {
@@ -19,27 +21,32 @@ function extract_data(text){
     return null;
 }
 
-//FALTA FAZER A LÓGICA PARA QUANDO SAO MÚLTIPLOS JOGOS
+// FALTA FAZER A LÓGICA PARA QUANDO NÃO TEM JOGOS GRÁTIS
 async function epicGames() {
     const WEBSITE = "https://www.epicgames.com/store/pt-BR/free-games";
     var stringContent;
     try{
         const driver = new Builder().forBrowser('chrome').build();    
         await driver.get(WEBSITE);
-        const element = await driver.wait(until.elementLocated(By.className('css-1myhtyb')), 5000);
+        const element = await driver.wait(until.elementLocated(By.className('css-1mytyb')), 5000);
         stringContent = await element.getText();
         var splitContent = stringContent.split("\n");
-        var game = splitContent[1];
-        var datehour = splitContent[2].split(" às ");
-        var date = extract_data(datehour[0]);     
-        message = "@everyone " + game + " está de graça na Epic até " + date + " às " + datehour[1];
+        var message = "@everyone", game, datehour, date, tempString;
+        for(var i=0; i<(splitContent.length/3-1);i++){
+            game = splitContent[3*i+1];
+            datehour = splitContent[3*i+2].split(" às ");
+            date = extract_data(datehour[0]);
+            tempString = "\n" + game + " está de graça na Epic até " + date + " às " + datehour[1];
+            message = message + tempString;
+        }
+        message = message + "\nAcesse o site para mais informações: " + WEBSITE;
         await driver.quit();
         return message;
     }
     catch(error){
-        console.log("CATCH ERROR: ", error);
         await driver.quit()
+        if(error.name === "TimeoutError") return "Não há jogos grátis no momento...";
+        else console.log("CATCH ERROR: ", error);
     }
 };
-
 module.exports = {epicGames};

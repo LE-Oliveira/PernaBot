@@ -1,38 +1,25 @@
+import re
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
-def deal(str):
-    pieces = str.split('.')
-    hour = pieces[1]
-    date = pieces[0].split(' de ')
-    day = date[0] + '/'
-    month = date[1]
-    if month == 'jan':
-        day+='01'
-    elif month == 'fev':
-        day+='02'
-    elif month == 'mar':
-        day+='03'
-    elif month == 'abr':
-        day+='04'
-    elif month == 'mai':
-        day+='05'
-    elif month == 'jun':
-        day+='06'
-    elif month == 'jul':
-        day+='07'
-    elif month == 'ago':
-        day+='08'
-    elif month == 'set':
-        day+='09'
-    elif month == 'out':
-        day+='10'
-    elif month == 'nov':
-        day+='11'
-    else:
-        day+='12'
-    return day + hour
+def extract_data(text):
+    months={
+        'jan': '01', 'fev': '02', 'mar': '03',
+        'abr': '04', 'mai': '05', 'jun': '06',
+        'jul': '07', 'ago': '08', 'set': '09',
+        'out': '10', 'nov': '11', 'dez': '12'
+    }
+    pattern = re.compile(r'(\d+) de (\w+)\.')
+    coincidence = pattern.search(text)
+    if coincidence:
+        day = coincidence.group(1)
+        short_month = coincidence.group(2).lower()
+        month = months.get(short_month, '00')
+        date = f"{day}/{month}"
+        return date
+    return None
 
 def weak(str):
     if(str.find("às") != -1):
@@ -42,7 +29,9 @@ def weak(str):
 
 PATH = "D:/Users/lsdeo/Documents/Prog/BotPromoDisc/PernaBot/chromedriver.exe"
 WEBSITE = "https://www.epicgames.com/store/pt-BR/free-games"
-driver = webdriver.Chrome(service=Service(PATH))
+chrome_service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=chrome_service)
+# driver = webdriver.Chrome(service=Service(PATH))
 
 driver.get(WEBSITE)
 
@@ -75,7 +64,7 @@ for g in game:
     nome = aux[1].lower()
     nomes = nome.split(' ')
     if weak(tim[1]) == "essa":
-        txt = '-' + aux[1] + ' está de graça para resgate permanente na Epic até dia ' + deal(tim[1]) + '§'
+        txt = '-' + aux[1] + ' está de graça para resgate permanente na Epic até dia ' + extract_data(tim[1]) + '§'
     elif weak(tim[1]) == "outra":
         period = str(tim[1])
         tim = period.split("-")
