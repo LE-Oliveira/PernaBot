@@ -1,9 +1,9 @@
 const { Builder, By } = require('selenium-webdriver');
 const edge = require('selenium-webdriver/edge');
+const config = require("./config.json");
 
 async function epicGames() {
-    const driverPath = "./msedgedriver.exe";
-    const service = new edge.ServiceBuilder(driverPath);
+    const service = new edge.ServiceBuilder(config.DRIVER_PATH);
     const driver = await new Builder()
         .forBrowser('MicrosoftEdge')
         .setEdgeService(service)

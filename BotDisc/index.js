@@ -1,9 +1,21 @@
 const { epicGames } = require('./seleniumEpic.js');
 const { Client, Intents } = require('discord.js');
 const config = require("./config.json");
+const yargs = require('yargs');
+
+const argv = yargs.option('env', {
+        alias: 'e',
+        describe: 'Define o ambiente de execução',
+        choices: ['dev', 'prod'],
+        default: 'dev',
+    })
+    .help()
+    .alias('help', 'h')
+    .argv;
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const prefix = "¢";
+const environment = argv.env;
 
 client.on("messageCreate", async function(message) { 
     if (!message.content.startsWith(prefix)) return;
@@ -35,12 +47,13 @@ client.on("messageCreate", async function(message) {
         var hour = date_ob.getHours();
         message.channel.send(hour.toString());
     }
-    else if (command === "sd") { 
+    else if (command === "sd" && environment === 'dev') { 
         message.channel.send("Shutting down...").then(() => {
             client.destroy();
             console.log("Bot off");
-            })
+        })
     }
+    else message.reply("Comando não encontrado. Use ¢help para ver os comandos disponíveis.");
 }); 
 
 client.login(config.BOT_TOKEN);
