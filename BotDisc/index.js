@@ -1,13 +1,8 @@
 const { epicGames } = require('./seleniumEpic.js');
 const { Client, Intents } = require('discord.js');
-// const fs = require('fs');
-// const { waitForDebugger } = require('inspector');
 const config = require("./config.json");
-// const EPIC_FILEPATH = "../gamesEpic.txt";
-// const STEAM_FILEPATH = "../gamesSteam.txt";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
 const prefix = "¢";
 
 client.on("messageCreate", async function(message) { 
@@ -39,6 +34,12 @@ client.on("messageCreate", async function(message) {
         var date_ob = new Date();
         var hour = date_ob.getHours();
         message.channel.send(hour.toString());
+    }
+    else if (command === "sd") { 
+        message.channel.send("Shutting down...").then(() => {
+            client.destroy();
+            console.log("Bot off");
+            })
     }
 }); 
 

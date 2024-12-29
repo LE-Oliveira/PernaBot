@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js --env=development",
+    "prod": "node index.js --env=production",
     "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chromedriver": "^108.0.0",
+    "chromedriver": "^131.0.4",
     "discord.js": "^13.5.0",
-    "nodemon": "^2.0.20",
-    "selenium-webdriver": "^4.7.1"
+    "nodemon": "^3.1.9",
+    "selenium-webdriver": "^4.7.1",
+    "yargs": "^17.7.2"
   }
 }
